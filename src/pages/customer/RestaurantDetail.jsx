@@ -3,12 +3,12 @@ import { useLocation, useParams } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { Star, Clock, Plus, Check } from 'lucide-react';
 import { restaurantService } from '../../services/restaurantService';
+import { API_ORIGIN } from '../../services/api';
 import { usePlatform } from '../../context/PlatformContext';
 import { formatCurrency } from '../../utils/currency';
 
 const FALLBACK_RESTAURANT_IMAGE = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScgN0ny1u6K14Zk4oWKj9xhxZVSbz6WLN00XZbDYV0I2PS1xFT6xya82Zf&s=10';
 const FALLBACK_MENU_IMAGE = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80';
-const API_ORIGIN = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace(/\/api\/?$/, '');
 
 const resolveImage = (image, fallback) => {
   if (!image) return fallback;

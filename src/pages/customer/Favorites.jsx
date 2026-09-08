@@ -1,9 +1,9 @@
 import { Heart, Star, Clock, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { usePlatform } from '../../context/PlatformContext';
+import { API_ORIGIN } from '../../services/api';
 
 const FALLBACK_RESTAURANT_IMAGE = 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=85';
-const API_ORIGIN = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace(/\/api\/?$/, '');
 
 const resolveImage = (image) => {
   if (!image) return FALLBACK_RESTAURANT_IMAGE;

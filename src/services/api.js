@@ -1,4 +1,5 @@
-const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace(/\/$/, '');
+export const API_BASE_URL = (import.meta.env.VITE_API_URL || 'https://biteexpress-platform-ba.onrender.com/api').replace(/\/$/, '');
+export const API_ORIGIN = API_BASE_URL.replace(/\/api\/?$/, '');
 
 export const apiRequest = async (endpoint, options = {}) => {
   const token = window.localStorage.getItem('biteexpress-token');
