@@ -83,7 +83,7 @@ export const RestaurantList = () => {
             >
               <div className="relative h-48 overflow-hidden">
                 <img 
-                  src={resolveImage(restaurant.image)} 
+                  src={FALLBACK_RESTAURANT_IMAGE}
                   alt={restaurant.name} 
                   onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = FALLBACK_RESTAURANT_IMAGE; }}
                   className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
