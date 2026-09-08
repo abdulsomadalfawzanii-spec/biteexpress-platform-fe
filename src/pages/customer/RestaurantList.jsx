@@ -7,7 +7,7 @@ import { restaurantService } from '../../services/restaurantService';
 import { API_ORIGIN } from '../../services/api';
 import { formatCurrency } from '../../utils/currency';
 
-const FALLBACK_RESTAURANT_IMAGE = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScgN0ny1u6K14Zk4oWKj9xhxZVSbz6WLN00XZbDYV0I2PS1xFT6xya82Zf&s=10';
+const FALLBACK_RESTAURANT_IMAGE = 'https://i.pinimg.com/736x/c3/f8/ce/c3f8ce420f5299c173e57c79f452d51d.jpg';
 
 const resolveImage = (image) => {
   if (!image) return FALLBACK_RESTAURANT_IMAGE;

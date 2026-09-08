@@ -142,8 +142,9 @@ main .hover\:bg-orange-600:hover {
 
 .hero-shell {
 	background:
-		linear-gradient(105deg, rgba(24, 33, 31, 0.95), rgba(24, 33, 31, 0.73)),
-		url('https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=1800&q=85') center/cover;
+		linear-gradient(105deg, rgba(24, 33, 31, 0.93), rgba(24, 33, 31, 0.68)),
+		radial-gradient(circle at top right, rgba(242, 107, 56, 0.18), transparent 28%),
+		#1b2725;
 	border-radius: 0 0 3rem 3rem;
 	overflow: hidden;
 	position: relative;
@@ -158,6 +159,42 @@ main .hover\:bg-orange-600:hover {
 	right: -8rem;
 	top: -9rem;
 	width: 22rem;
+}
+
+.hero-visual-wrap {
+	position: relative;
+	padding: 1rem 0 1rem 1rem;
+}
+
+.hero-visual-card {
+	background: rgba(255, 255, 255, 0.12);
+	border: 8px solid rgba(255, 255, 255, 0.12);
+	border-radius: 2.4rem;
+	box-shadow: 0 30px 65px rgba(11, 18, 16, 0.35);
+	overflow: hidden;
+	transform: rotate(3deg);
+}
+
+.hero-visual-image {
+	display: block;
+	width: 100%;
+	aspect-ratio: 4 / 5;
+	object-fit: cover;
+	object-position: center;
+}
+
+.hero-floating-badge {
+	position: absolute;
+	left: -1.2rem;
+	bottom: -1rem;
+	display: flex;
+	align-items: center;
+	gap: 0.8rem;
+	background: rgba(255, 253, 248, 0.94);
+	color: var(--ink);
+	border-radius: 1.2rem;
+	padding: 0.9rem 1.1rem;
+	box-shadow: 0 18px 36px rgba(17, 27, 26, 0.18);
 }
 
 .hero-kicker {

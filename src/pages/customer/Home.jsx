@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Search, MapPin, ArrowRight, Utensils, ShieldCheck, Clock, Star } from 'lucide-react';
 import { restaurantService } from '../../services/restaurantService';
 
-const FALLBACK_RESTAURANT_IMAGE = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScgN0ny1u6K14Zk4oWKj9xhxZVSbz6WLN00XZbDYV0I2PS1xFT6xya82Zf&s=10';
+const FALLBACK_RESTAURANT_IMAGE = 'https://i.pinimg.com/736x/c3/f8/ce/c3f8ce420f5299c173e57c79f452d51d.jpg';
 
 const normalizeRestaurant = (restaurant) => ({
   ...restaurant,
@@ -62,12 +62,17 @@ export const Home = () => {
               </button>
             </div>
           </div>
-          <div className="hidden lg:block relative">
-            <div className="rounded-[2rem] overflow-hidden rotate-2 shadow-2xl border-8 border-white/10">
-              <img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=85" alt="Fresh bowl prepared for delivery" className="w-full aspect-[4/5] object-cover" />
+          <div className="hidden lg:block relative hero-visual-wrap">
+            <div className="hero-visual-card">
+              <img
+                src="https://i.pinimg.com/1200x/76/13/ec/7613ecc1f2ad0c700157de4ced2292e5.jpg"
+                alt="Fresh restaurant meal tray"
+                className="hero-visual-image"
+              />
             </div>
-            <div className="absolute -bottom-5 -left-8 bg-white text-gray-900 rounded-2xl p-4 shadow-xl flex items-center gap-3">
-              <span className="w-9 h-9 rounded-full bg-amber-100 text-amber-500 flex items-center justify-center"><Star className="w-5 h-5 fill-current" /></span><span className="text-sm font-bold">4.9 average<br /><span className="text-gray-400 font-normal">from hungry neighbors</span></span>
+            <div className="hero-floating-badge">
+              <span className="w-9 h-9 rounded-full bg-amber-100 text-amber-500 flex items-center justify-center"><Star className="w-5 h-5 fill-current" /></span>
+              <span className="text-sm font-bold">4.9 average<br /><span className="text-gray-400 font-normal">from hungry neighbors</span></span>
             </div>
           </div>
         </div>
