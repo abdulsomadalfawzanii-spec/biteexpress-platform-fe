@@ -10,6 +10,11 @@ export const Navigation = () => {
   const { cartItems } = useCart();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
+  const handleLogout = () => {
+    logout();
+    setIsMobileOpen(false);
+  };
+
   const staticLinks = [
     ['About', '/about'],
     ['Careers', '/careers'],
@@ -67,16 +72,16 @@ export const Navigation = () => {
           )}
 
           {user ? (
-            <div className="flex items-center space-x-3 border-l border-gray-200 pl-4">
+            <div className="hidden lg:flex items-center space-x-3 border-l border-gray-200 pl-4">
               {user.role === 'customer' && <Link to="/favorites" className="text-gray-500 hover:text-orange-500" title="Favorites"><Heart className="w-5 h-5" /></Link>}
               <Link to={user.role === 'customer' ? '/account' : user.role === 'admin' ? '/admin/settings' : `/${user.role}/profile`} className="text-gray-500 hover:text-orange-500" title="Account"><UserRound className="w-5 h-5" /></Link>
 
-              <button onClick={logout} className="text-gray-400 hover:text-red-500">
+              <button onClick={handleLogout} className="text-gray-400 hover:text-red-500" title="Logout">
                 <LogOut className="w-5 h-5" />
               </button>
             </div>
           ) : (
-            <Link to="/login" className="bg-orange-500 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-orange-600 transition">
+            <Link to="/login" className="hidden lg:inline-flex bg-orange-500 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-orange-600 transition">
               Sign In
             </Link>
           )}
@@ -91,8 +96,19 @@ export const Navigation = () => {
             </Link>
           ))}
           {user && (
-            <Link to={user.role === 'customer' ? '/account' : user.role === 'admin' ? '/admin/settings' : `/${user.role}/profile`} onClick={() => setIsMobileOpen(false)} className="block rounded-xl px-3 py-3 text-sm font-semibold text-gray-600 hover:bg-orange-50">
-              Account settings
+            <>
+              <Link to={user.role === 'customer' ? '/account' : user.role === 'admin' ? '/admin/settings' : `/${user.role}/profile`} onClick={() => setIsMobileOpen(false)} className="block rounded-xl px-3 py-3 text-sm font-semibold text-gray-600 hover:bg-orange-50">
+                Account settings
+              </Link>
+              <button onClick={handleLogout} className="w-full flex items-center gap-2 rounded-xl px-3 py-3 text-sm font-semibold text-red-500 hover:bg-red-50">
+                <LogOut className="w-4 h-4" />
+                Logout
+              </button>
+            </>
+          )}
+          {!user && (
+            <Link to="/login" onClick={() => setIsMobileOpen(false)} className="block rounded-xl px-3 py-3 text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600">
+              Sign In
             </Link>
           )}
         </div>
