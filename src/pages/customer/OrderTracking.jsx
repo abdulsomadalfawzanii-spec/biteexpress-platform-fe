@@ -125,8 +125,22 @@ export const OrderTracking = () => {
   }, [orderId, order?.orderStatus, order?.status]);
 
   const status   = order?.orderStatus || order?.status || 'pending';
-  const stepIdx  = STATUS_ORDER.indexOf(status);
-  const isFinal  = ['delivered', 'cancelled', 'rejected'].includes(status);
+  const currentStatus = String(status).toLowerCase();
+  const stepIdx  = Math.max(0, STATUS_ORDER.indexOf(currentStatus));
+  const isFinal  = ['delivered', 'cancelled', 'rejected'].includes(currentStatus);
+
+  const rawHistory = Array.isArray(order?.statusHistory)
+    ? order.statusHistory
+        .map((entry) => String(entry?.status || '').toLowerCase())
+        .filter(Boolean)
+    : [];
+
+  const historyOnly = Array.from(new Set(rawHistory.filter((s) => STATUS_ORDER.includes(s))));
+  const shownStatusFlow = Array.from(new Set([
+    ...historyOnly,
+    ...STATUS_ORDER.slice(0, Math.max(0, stepIdx + 1)),
+    currentStatus,
+  ]));
 
   if (loading) return (
     <div className="max-w-4xl mx-auto px-4 py-16 flex flex-col items-center gap-4">
@@ -184,10 +198,9 @@ export const OrderTracking = () => {
         )}
 
         {/* Status stepper — horizontal scroll on mobile */}
-        {!['rejected', 'cancelled'].includes(status) && (
+        {!['rejected', 'cancelled'].includes(currentStatus) && (
           <div className="overflow-x-auto -mx-2 px-2 pb-2">
             <div className="relative flex justify-between items-start my-6" style={{ minWidth: `${STEPS.length * 7}rem` }}>
-              {/* Progress line */}
               <div className="absolute top-5 left-0 right-0 h-0.5 bg-[var(--line)] z-0" />
               {stepIdx > 0 && (
                 <div
@@ -197,14 +210,14 @@ export const OrderTracking = () => {
               )}
 
               {STEPS.map((step, idx) => {
-                const done   = idx < stepIdx || (status === step.key && isFinal);
+                const done = idx < stepIdx || (currentStatus === step.key && isFinal) || shownStatusFlow.includes(step.key);
                 const active = idx === stepIdx && !isFinal;
-                const Icon   = step.icon;
+                const Icon = step.icon;
 
                 return (
                   <div key={step.key} className="relative z-10 flex flex-col items-center bg-white px-2 text-center w-28">
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
-                      done   ? 'bg-emerald-500 text-white' :
+                      done ? 'bg-emerald-500 text-white' :
                       active ? 'bg-orange-500 text-white ring-4 ring-orange-100' :
                                'bg-[var(--canvas)] text-[var(--muted)]'
                     }`}>
@@ -214,6 +227,27 @@ export const OrderTracking = () => {
                       {step.label}
                     </span>
                   </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {Array.isArray(order?.statusHistory) && order.statusHistory.length > 0 && (
+          <div className="mt-4 border-t border-[var(--line)] pt-4">
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-[0.74rem] font-black uppercase tracking-[0.2em] text-[var(--muted)]">Food order flow</span>
+              <span className="text-[0.72rem] font-semibold text-[var(--muted)]">{rawHistory.length}/{STEPS.length}</span>
+            </div>
+            <div className="flex flex-wrap gap-2 mt-3">
+              {STEPS.map((step) => {
+                const isSeen = shownStatusFlow.includes(step.key);
+                return (
+                  <span key={step.key} className={`px-3 py-1 rounded-full text-[0.68rem] font-bold border ${
+                    isSeen ? 'border-orange-300 bg-orange-50 text-orange-700' : 'border-[var(--line)] bg-[var(--canvas)] text-[var(--muted)]'
+                  }`}>
+                    {step.label}
+                  </span>
                 );
               })}
             </div>

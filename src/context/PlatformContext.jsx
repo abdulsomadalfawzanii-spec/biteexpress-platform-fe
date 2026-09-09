@@ -108,6 +108,14 @@ const normalizeOrder = (
   createdAt: order?.createdAt
     ? new Date(order.createdAt).toLocaleString()
     : 'Recently',
+
+  statusHistory: Array.isArray(order?.statusHistory)
+    ? order.statusHistory.map((entry) => ({
+        status: String(entry?.status || '').toLowerCase(),
+        note: entry?.note || '',
+        timestamp: entry?.timestamp || new Date().toISOString(),
+      }))
+    : [],
 });
 
 /* =========================================================
