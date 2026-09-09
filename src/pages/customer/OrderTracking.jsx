@@ -37,46 +37,62 @@ export const OrderTracking = () => {
   const [searchParams] = useSearchParams();
   const orderIdParam = searchParams.get('id');
 
-  const allowedTrackStatuses = new Set([
-    'pending',
-    'confirmed',
-    'preparing',
-    'ready_for_pickup',
-    'assigned',
-    'picked_up',
-    'on_the_way',
-  ]);
-
   const getOrderStatus = (entry) => String(entry?.orderStatus || entry?.status || 'pending').toLowerCase();
 
-  const pickContextOrder = () => {
-    if (orderIdParam) {
-      return orders.find((o) => String(o.id) === orderIdParam || String(o._id) === orderIdParam) || null;
-    }
-
-    const activeOrders = orders
-      .filter((o) => {
-        const status = getOrderStatus(o);
-        return allowedTrackStatuses.has(status);
-      })
+  const pickFallbackOrder = () => {
+    const ordered = orders
+      .filter((o) => !['delivered', 'cancelled', 'rejected'].includes(getOrderStatus(o)))
       .sort((a, b) => {
-        const aDate = new Date(a?.createdAt || a?.createdAt || Date.now()).getTime();
-        const bDate = new Date(b?.createdAt || b?.createdAt || Date.now()).getTime();
-        return bDate - aDate;
+        const aTime = new Date(a?.createdAt || Date.now()).getTime();
+        const bTime = new Date(b?.createdAt || Date.now()).getTime();
+        return bTime - aTime;
       });
 
-    return activeOrders[0] || orders[0] || null;
+    return ordered[0] || orders[0] || null;
   };
 
-  const contextOrder = pickContextOrder();
-
-  const [order,   setOrder]   = useState(contextOrder || null);
-  const [loading, setLoading] = useState(!contextOrder);
-  const [error,   setError]   = useState('');
+  const [order, setOrder] = useState(null);
+  const [loading, setLoading] = useState(Boolean(orderIdParam));
+  const [error, setError] = useState('');
   const [polling, setPolling] = useState(false);
 
   const orderId = order?._id || order?.id;
   const fetchOrderRef = useRef(null);
+
+  useEffect(() => {
+    // Explicit route id wins; route mapper from OrderDetails sends /orders/track?id=<orderId>
+    if (orderIdParam) {
+      const exactOrder = orders.find((o) => String(o.id) === String(orderIdParam) || String(o._id) === String(orderIdParam));
+      if (exactOrder) {
+        setOrder(exactOrder);
+        setError('');
+        setLoading(false);
+        return;
+      }
+
+      setOrder(null);
+      setLoading(true);
+      setError('');
+
+      orderService.getById(orderIdParam)
+        .then((fresh) => {
+          setOrder(fresh);
+          setError('');
+        })
+        .catch((err) => {
+          setError(err.message || 'Could not load order status.');
+        })
+        .finally(() => setLoading(false));
+
+      return;
+    }
+
+    // No route id: choose the newest active order from the customer list only.
+    const fallback = pickFallbackOrder();
+    setOrder(fallback);
+    setError('');
+    setLoading(false);
+  }, [orderIdParam, orders]);
 
   const fetchOrder = useCallback(async (showLoader = false) => {
     if (!orderId) return;
@@ -96,11 +112,6 @@ export const OrderTracking = () => {
   useEffect(() => {
     fetchOrderRef.current = fetchOrder;
   }, [fetchOrder]);
-
-  // Initial load if we have an ID
-  useEffect(() => {
-    if (!contextOrder) queueMicrotask(() => setLoading(false));
-  }, [contextOrder, orders]);
 
   // Auto-refresh every 30 seconds while order is active
   useEffect(() => {

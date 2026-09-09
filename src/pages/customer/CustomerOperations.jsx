@@ -263,7 +263,7 @@ export const OrderDetails = () => {
             <p className="text-sm text-[var(--muted)] flex gap-2"><MapPin className="w-4 h-4 text-orange-500 shrink-0 mt-0.5" />{order.address || order.deliveryAddress || '—'}</p>
             {order.customerPhone && <p className="text-sm text-[var(--muted)] flex gap-2"><Phone className="w-4 h-4 text-orange-500 shrink-0 mt-0.5" />{order.customerPhone}</p>}
           </div>
-          <Link to="/orders/track" className="flex items-center justify-between bg-orange-500 hover:bg-orange-600 text-white rounded-2xl p-5 transition">
+          <Link to={`/orders/track?id=${order?.id || id}`} className="flex items-center justify-between bg-orange-500 hover:bg-orange-600 text-white rounded-2xl p-5 transition">
             <div>
               <p className="font-bold">Track live status</p>
               <p className="text-sm text-orange-100 mt-0.5">{s.label}</p>
