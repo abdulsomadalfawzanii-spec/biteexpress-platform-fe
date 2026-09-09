@@ -37,10 +37,38 @@ export const OrderTracking = () => {
   const [searchParams] = useSearchParams();
   const orderIdParam = searchParams.get('id');
 
-  // Pick the most recent non-delivered order, or use the ID from query param
-  const contextOrder = orderIdParam
-    ? orders.find((o) => String(o.id) === orderIdParam || String(o._id) === orderIdParam)
-    : orders.find((o) => !['delivered', 'cancelled', 'rejected'].includes(o.orderStatus || o.status)) || orders[0];
+  const allowedTrackStatuses = new Set([
+    'pending',
+    'confirmed',
+    'preparing',
+    'ready_for_pickup',
+    'assigned',
+    'picked_up',
+    'on_the_way',
+  ]);
+
+  const getOrderStatus = (entry) => String(entry?.orderStatus || entry?.status || 'pending').toLowerCase();
+
+  const pickContextOrder = () => {
+    if (orderIdParam) {
+      return orders.find((o) => String(o.id) === orderIdParam || String(o._id) === orderIdParam) || null;
+    }
+
+    const activeOrders = orders
+      .filter((o) => {
+        const status = getOrderStatus(o);
+        return allowedTrackStatuses.has(status);
+      })
+      .sort((a, b) => {
+        const aDate = new Date(a?.createdAt || a?.createdAt || Date.now()).getTime();
+        const bDate = new Date(b?.createdAt || b?.createdAt || Date.now()).getTime();
+        return bDate - aDate;
+      });
+
+    return activeOrders[0] || orders[0] || null;
+  };
+
+  const contextOrder = pickContextOrder();
 
   const [order,   setOrder]   = useState(contextOrder || null);
   const [loading, setLoading] = useState(!contextOrder);
