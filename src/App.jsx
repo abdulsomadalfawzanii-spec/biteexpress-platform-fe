@@ -5,6 +5,9 @@ import { PlatformProvider } from './context/PlatformContext';
 import { Navigation } from './components/Navigation';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Footer } from './components/Footer';
+import { AboutPage } from './pages/static/AboutPage';
+import { ContactPage } from './pages/static/ContactPage';
+import { CareersPage } from './pages/static/CareersPage';
 import { Home } from './pages/customer/Home';
 import { RestaurantList } from './pages/customer/RestaurantList';
 import { RestaurantDetail } from './pages/customer/RestaurantDetail';
@@ -42,6 +45,9 @@ export default function App() {
             <main>
               <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/careers" element={<CareersPage />} />
+                <Route path="/contact" element={<ContactPage />} />
                 <Route path="/restaurants" element={<RestaurantList />} />
                 <Route path="/restaurant/:id" element={<RestaurantDetail />} />
                 <Route path="/cart" element={<ProtectedRoute allowedRoles={['customer']}><Cart /></ProtectedRoute>} />

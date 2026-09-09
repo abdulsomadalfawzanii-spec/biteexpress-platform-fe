@@ -9,7 +9,7 @@ const footerGroups = [
 	},
 	{
 		title: 'Company',
-		links: [['About BiteExpress', '/'], ['Careers', '/'], ['Contact us', '/'], ['Partner with us', '/register']]
+		links: [['About BiteExpress', '/about'], ['Careers', '/careers'], ['Contact us', '/contact'], ['Partner with us', '/register']]
 	},
 	{
 		title: 'For partners',
